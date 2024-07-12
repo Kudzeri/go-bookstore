@@ -52,3 +52,12 @@ func DeleteBook(id int64) Book {
 	db.Where("ID=?", id).Delete(book)
 	return book
 }
+
+func (b *Book) UpdateBook() *Book {
+	err := db.Save(b).Error
+	if err != nil {
+		fmt.Printf("models.UpdateBook(): %v\n", err)
+		return nil
+	}
+	return b
+}
