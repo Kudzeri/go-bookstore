@@ -72,9 +72,15 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	}
 	bookDetails, _ := models.GetBookByID(ID)
 
-	bookDetails.Name = updateBook.Name
-	bookDetails.Author = updateBook.Author
-	bookDetails.Publication = updateBook.Publication
+	if updateBook.Name != "" {
+		bookDetails.Name = updateBook.Name
+	}
+	if updateBook.Author != "" {
+		bookDetails.Author = updateBook.Author
+	}
+	if updateBook.Publication != "" {
+		bookDetails.Publication = updateBook.Publication
+	}
 
 	b := bookDetails.UpdateBook()
 	res, err := json.Marshal(b)
