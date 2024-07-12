@@ -22,7 +22,7 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error marshalling book", http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
@@ -35,7 +35,7 @@ func GetBooks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error marshalling books", http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
@@ -54,15 +54,57 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error marshalling book", http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
 
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	var updateBook = &models.Book{}
+	utils.ParseBody(r, updateBook)
+	vars := mux.Vars(r)
+	bookID := vars["bookID"]
+	ID, err := strconv.ParseInt(bookID, 0, 0)
+	if err != nil {
+		fmt.Printf("bookController.UpdateBook(): %v\n", err)
+		http.Error(w, "Invalid book ID", http.StatusBadRequest)
+		return
+	}
+	bookDetails, _ := models.GetBookByID(ID)
 
+	bookDetails.Name = updateBook.Name
+	bookDetails.Author = updateBook.Author
+	bookDetails.Publication = updateBook.Publication
+
+	b := bookDetails.UpdateBook()
+	res, err := json.Marshal(b)
+	if err != nil {
+		fmt.Printf("bookController.UpdateBook(): %v\n", err)
+		http.Error(w, "Error marshalling book", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
 }
 
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
-
+	vars := mux.Vars(r)
+	bookID := vars["bookID"]
+	ID, err := strconv.ParseInt(bookID, 0, 0)
+	if err != nil {
+		fmt.Printf("bookController.DeleteBook(): %v\n", err)
+		http.Error(w, "Invalid book ID", http.StatusBadRequest)
+		return
+	}
+	book := models.DeleteBook(ID)
+	res, err := json.Marshal(book)
+	if err != nil {
+		fmt.Printf("bookController.DeleteBook(): %v\n", err)
+		http.Error(w, "Error marshalling book", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
 }
