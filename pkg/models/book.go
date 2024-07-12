@@ -35,10 +35,9 @@ func (b *Book) CreateBook() *Book {
 }
 
 func GetAllBook() []Book {
-	var Books []Book
-	db.Find(&Books)
-
-	return Books
+	var books []Book
+	db.Find(&books)
+	return books
 }
 
 func GetBookByID(id int64) (*Book, *gorm.DB) {
