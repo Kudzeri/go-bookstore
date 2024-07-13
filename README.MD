@@ -3,6 +3,7 @@
 This is a simple RESTful API for managing a bookstore, built with Go. It allows you to perform CRUD operations on books in a SQLite database.
 
 ## Project Structure
+```
 go-bookstore/
 ├── pkg/
 │   ├── config/
@@ -19,7 +20,7 @@ go-bookstore/
 ├── go.mod
 ├── go.sum
 └── README.md
-
+```
 
 ## Requirements
 
